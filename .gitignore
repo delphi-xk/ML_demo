@@ -1,4 +1,9 @@
 
 datasets/
-.idea/*
+.idea/vcs.xml
+.idea/misc.xml
+.idea/ML_demo.iml
+.idea/modules.xml
+.idea/workspace.xml
+
 
