@@ -9,7 +9,7 @@ import os
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
-import matplotlib.pyplot as plt
+
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -39,6 +39,9 @@ B_1_time_index = DataFrame(B_1['travel_time'].values,
 # resample mean travel time (seconds) in 20Min time intervals, left closed
 B_1_resample = B_1_time_index.resample('20Min', closed='left').mean()
 
-# FIX ME:nearly half of the data is null, need some processing or interpolation
-print(B_1_resample.info())
+# FIX ME: nearly half of the data is null, need some processing or interpolation
+# print(B_1_resample.info())
 
+slc = B_1_resample.index.to_series().dt.hour.isin(range(6, 19))
+select_time = B_1_resample.loc[slc]
+print(select_time)
