@@ -15,12 +15,15 @@ from keras.layers import Dropout
 from keras.layers import Activation
 from keras import losses
 from keras import backend as K
+
 # Training datasets from 07.19 - 10.17, total 91 days
 # Consider time from 6 to 19, that is 13 hours a day
 # Total datasets length 91*13*3 = 3549
-datasets = pd.read_csv('../datasets/A_2_processed.csv')
-dataArray = datasets['travel_time'].values.reshape((91, 39))
+A_2_data = pd.read_csv('../datasets/A_2_processed.csv')
+A_2_Array = A_2_data['travel_time'].values.reshape((91, 39))
 
+A_3_data = pd.read_csv('../datasets/A_3_processed.csv')
+A_3_Array = A_3_data['travel_time'].values.reshape((91, 39))
 
 # 20Min * 6 = 2H
 sequence_length = 6
@@ -45,9 +48,16 @@ def create_dateset(dataArr, sequence_length):
 # dataArray = scaler.fit_transform(dataArray)
 
 
-trainX, trainY = create_dateset(dataArray, sequence_length)
+# A_2_trainX, A_2_trainY = create_dateset(A_2_Array, sequence_length)
+# A_3_trainX, A_3_trainY = create_dateset(A_3_Array, sequence_length)
+# print(A_2_trainX.shape, A_2_trainY.shape)
+#
+# trainX = np.concatenate((A_2_trainX, A_3_trainX), axis=0)
+# trainY = np.concatenate((A_2_trainY, A_3_trainY), axis=0)
+# print(trainX.shape, trainY.shape)
 
-
+trainX, trainY = create_dateset(A_3_Array, sequence_length)
+print(trainX.shape, trainY.shape)
 # reshape input data to be [sample, time step, features]
 trainX = np.reshape(trainX, (trainX.shape[0], trainX.shape[1], 1))
 
