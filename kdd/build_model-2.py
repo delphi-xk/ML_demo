@@ -19,16 +19,32 @@ from keras import backend as K
 # Training datasets from 07.19 - 10.17, total 91 days
 # Consider time from 6 to 19, that is 13 hours a day
 # Total datasets length 91*13*3 = 3549
-A_2_data = pd.read_csv('../datasets/A_2_processed.csv')
-A_2_Array = A_2_data['travel_time'].values.reshape((91, 39))
 
-A_3_data = pd.read_csv('../datasets/A_3_processed.csv')
-A_3_Array = A_3_data['travel_time'].values.reshape((91, 39))
+A_2_Array = pd.read_csv('../datasets/A_2_processed.csv')['travel_time']\
+    .values.reshape((91, 39))
+
+A_3_Array = pd.read_csv('../datasets/A_3_processed.csv')['travel_time']\
+    .values.reshape((91, 39))
+
+B_1_Array = pd.read_csv('../datasets/B_1_processed.csv')['travel_time']\
+    .values.reshape((91, 39))
+
+B_3_Array = pd.read_csv('../datasets/B_3_processed.csv')['travel_time']\
+    .values.reshape((91, 39))
+
+C_1_Array = pd.read_csv('../datasets/C_1_processed.csv')['travel_time']\
+    .values.reshape((91, 39))
+
+C_3_Array = pd.read_csv('../datasets/C_3_processed.csv')['travel_time']\
+    .values.reshape((91, 39))
 
 # 20Min * 6 = 2H
 sequence_length = 6
 
-
+# use metric MAPE
+# Equivalent to MAE, but sometimes easier to interpret.
+# diff = K.abs((y_true - y_pred) / K.clip(K.abs(y_true), K.epsilon(), None))
+# return 100. * K.mean(diff, axis=-1)
 def my_custom_loss(y_true, y_pred):
 
     pass
@@ -56,9 +72,28 @@ def create_dateset(dataArr, sequence_length):
 # trainY = np.concatenate((A_2_trainY, A_3_trainY), axis=0)
 # print(trainX.shape, trainY.shape)
 
-trainX, trainY = create_dateset(A_3_Array, sequence_length)
-print(trainX.shape, trainY.shape)
+# generate aggregate datasets
+def create_train_data():
+    # A_2_trainX, A_2_trainY = create_dateset(A_2_Array, sequence_length)
+    # A_3_trainX, A_3_trainY = create_dateset(A_3_Array, sequence_length)
+    B_1_trainX, B_1_trainY = create_dateset(B_1_Array, sequence_length)
+    B_3_trainX, B_3_trainY = create_dateset(B_3_Array, sequence_length)
+    # C_1_trainX, C_1_trainY = create_dateset(C_1_Array, sequence_length)
+    # C_3_trainX, C_3_trainY = create_dateset(C_3_Array, sequence_length)
+    X = np.concatenate((#A_2_trainX, A_3_trainX,
+                        B_1_trainX, B_3_trainX,
+                        #C_1_trainX, C_3_trainX
+                        ), axis=0)
+    Y = np.concatenate((#A_2_trainY, A_3_trainY,
+                        B_1_trainY, B_3_trainY,
+                        #C_1_trainY, C_3_trainY
+                        ), axis=0)
+    return X, Y
+
+# trainX, trainY = create_dateset(B_1_Array, sequence_length)
+# print(trainX.shape, trainY.shape)
 # reshape input data to be [sample, time step, features]
+trainX, trainY = create_train_data()
 trainX = np.reshape(trainX, (trainX.shape[0], trainX.shape[1], 1))
 
 
@@ -77,10 +112,7 @@ model.add(LSTM(6, input_shape=(sequence_length, 1), return_sequences=False))
 model.add(Dense(1))
 model.add(Activation('linear'))
 
-# use metric MAPE
-# Equivalent to MAE, but sometimes easier to interpret.
-# diff = K.abs((y_true - y_pred) / K.clip(K.abs(y_true), K.epsilon(), None))
-# return 100. * K.mean(diff, axis=-1)
+
 
 model.compile(loss='mean_absolute_percentage_error', optimizer='adam')
 # model.compile(loss='mean_squared_error', optimizer='adam')
