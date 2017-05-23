@@ -44,4 +44,5 @@ B_1_resample = B_1_time_index.resample('20Min', closed='left').mean()
 
 slc = B_1_resample.index.to_series().dt.hour.isin(range(6, 19))
 select_time = B_1_resample.loc[slc]
-print(select_time)
+# print(select_time)
+
