@@ -18,7 +18,7 @@ from keras import backend as K
 # Training datasets from 07.19 - 10.17, total 91 days
 # Consider time from 6 to 19, that is 13 hours a day
 # Total datasets length 91*13*3 = 3549
-datasets = pd.read_csv('../notebook/select_time_interpolate.csv')
+datasets = pd.read_csv('../datasets/A_2_processed.csv')
 dataArray = datasets['travel_time'].values.reshape((91, 39))
 
 
@@ -34,8 +34,8 @@ def create_dateset(dataArr, sequence_length):
     dataX, dataY = [], []
     for i in range(dataArr.shape[0]):
         for j in range(dataArr.shape[1]-sequence_length-1):
-            a = dataArray[i, j:j+sequence_length]
-            b = dataArray[i, j+sequence_length]
+            a = dataArr[i, j:j+sequence_length]
+            b = dataArr[i, j+sequence_length]
             dataX.append(a)
             dataY.append(b)
     return np.array(dataX), np.array(dataY)
