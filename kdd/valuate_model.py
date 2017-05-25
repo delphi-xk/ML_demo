@@ -34,9 +34,9 @@ def computeMAPE(y_pred, y_true):
 if __name__ == '__main__':
 
     training_2_data = pd.read_csv("../datasets/trajectories(table 5)_training2.csv")
-    pred_data = pd.read_csv("../datasets/result1.csv")
-    a_2_fact = preprocess_fact_data(select_data('B',3,training_2_data))['travel_time'].values
-    a_2_pred = pred_data['b_3_pred'].values
+    pred_data = pd.read_csv("../datasets/a_2_pred.csv")
+    a_2_fact = preprocess_fact_data(select_data('A',2,training_2_data))['travel_time'].values
+    a_2_pred = pred_data['a_2_pred'].values
     assert len(a_2_fact) == len(a_2_pred)
     val = .0
     for i in range(len(a_2_fact)):

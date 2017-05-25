@@ -114,9 +114,10 @@ def build_model(trainX, trainY):
     model = Sequential()
     model.add(LSTM(
         3, input_shape=(sequence_length, 1), return_sequences=True))
+    model.add(Dropout(0.2))
     model.add(LSTM(6,  return_sequences=True))
-    model.add(LSTM(13, return_sequences=True))
-    model.add(LSTM(13,  return_sequences=True))
+    # model.add(LSTM(13, return_sequences=True))
+    # model.add(LSTM(13,  return_sequences=True))
     model.add(Dropout(0.2))
     model.add(LSTM(6, return_sequences=False))
     model.add(Dense(1))

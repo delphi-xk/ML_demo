@@ -45,42 +45,43 @@ def predict_data(test_array,model):
     return predict_array
 
 if __name__ == "__main__":
-    a_x_model = load_model('../models/a_x_models.h5')
-    b_x_model = load_model('../models/b_x_models.h5')
-    c_x_model = load_model('../models/c_x_models.h5')
+    a_2_model = load_model('../models/a_2_models.h5')
+    # a_x_model = load_model('../models/a_x_models.h5')
+    # b_x_model = load_model('../models/b_x_models.h5')
+    # c_x_model = load_model('../models/c_x_models.h5')
     test_data = pd.read_csv("../datasets/trajectories(table 5)_test1.csv")
 
     A_2_test = select_data('A', 2, test_data)
     A_2_processed = preproccess_test_data(A_2_test)
-    A_3_test = select_data('A', 3, test_data)
-    A_3_processed = preproccess_test_data(A_3_test)
+    # A_3_test = select_data('A', 3, test_data)
+    # A_3_processed = preproccess_test_data(A_3_test)
+    #
+    # B_1_test = select_data('B', 1, test_data)
+    # B_1_processed = preproccess_test_data(B_1_test)
+    # B_3_test = select_data('B', 3, test_data)
+    # B_3_processed = preproccess_test_data(B_3_test)
+    #
+    # C_1_test = select_data('C', 1, test_data)
+    # C_1_processed = preproccess_test_data(C_1_test)
+    # C_3_test = select_data('C', 3, test_data)
+    # C_3_processed = preproccess_test_data(C_3_test)
 
-    B_1_test = select_data('B', 1, test_data)
-    B_1_processed = preproccess_test_data(B_1_test)
-    B_3_test = select_data('B', 3, test_data)
-    B_3_processed = preproccess_test_data(B_3_test)
-
-    C_1_test = select_data('C', 1, test_data)
-    C_1_processed = preproccess_test_data(C_1_test)
-    C_3_test = select_data('C', 3, test_data)
-    C_3_processed = preproccess_test_data(C_3_test)
-
-    a_2_pred = predict_data(A_2_processed.values, c_x_model)
-    a_3_pred = predict_data(A_3_processed.values, c_x_model)
-
-    b_1_pred = predict_data(B_1_processed.values, c_x_model)
-    b_3_pred = predict_data(B_3_processed.values, c_x_model)
-
-    c_1_pred = predict_data(C_1_processed.values, c_x_model)
-    c_3_pred = predict_data(C_3_processed.values, c_x_model)
+    a_2_pred = predict_data(A_2_processed.values, a_2_model)
+    # a_3_pred = predict_data(A_3_processed.values, c_x_model)
+    #
+    # b_1_pred = predict_data(B_1_processed.values, c_x_model)
+    # b_3_pred = predict_data(B_3_processed.values, c_x_model)
+    #
+    # c_1_pred = predict_data(C_1_processed.values, c_x_model)
+    # c_3_pred = predict_data(C_3_processed.values, c_x_model)
 
     result = DataFrame({
         "a_2_pred": a_2_pred,
-        "a_3_pred": a_3_pred,
-        "b_1_pred": b_1_pred,
-        "b_3_pred": b_3_pred,
-        "c_1_pred": c_1_pred,
-        "c_3_pred": c_3_pred,
+        # "a_3_pred": a_3_pred,
+        # "b_1_pred": b_1_pred,
+        # "b_3_pred": b_3_pred,
+        # "c_1_pred": c_1_pred,
+        # "c_3_pred": c_3_pred,
     })
 
-    result.to_csv('../datasets/result1.csv')
+    result.to_csv('../datasets/a_2_pred.csv')
