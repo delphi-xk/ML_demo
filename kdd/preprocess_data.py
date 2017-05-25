@@ -18,7 +18,7 @@ columns  "intersection_id","tollgate_id","vehicle_id","starting_time","travel_se
 only intersection_id, tollgate_id, starting_time, travel_time in use so far  
 """
 
-trace_data = pd.read_csv("../datasets/trajectories(table 5)_training.csv")
+
 
 
 # FIX ME if more parameters considered
@@ -54,14 +54,8 @@ def preprocess_data(raw_data):
 # print(C_3_processed.isnull().values.any())
 
 
-route = {
-    "A": (2, 3),
-    "B": (1, 3),
-    "C": (1, 3)
-}
-
-
 def generate_data_files(dic):
+    trace_data = pd.read_csv("../datasets/trajectories(table 5)_training.csv")
     for i_id in dic.keys():
         for t_id in dic[i_id]:
             x_n = select_data(i_id, t_id, trace_data)
@@ -69,5 +63,10 @@ def generate_data_files(dic):
             file_name = '{}_{}_processed.csv'.format(i_id, t_id)
             x_n_processed.to_csv('../datasets/{}'.format(file_name))
 
+# route = {
+#     "A": (2, 3),
+#     "B": (1, 3),
+#     "C": (1, 3)
+# }
 # generate_data_files(route)
 
