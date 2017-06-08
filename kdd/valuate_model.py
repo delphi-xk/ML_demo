@@ -30,16 +30,19 @@ def preprocess_fact_data(raw_data):
 def computeMAPE(y_pred, y_true):
     diff = np.abs((y_true - y_pred) / y_true)
     return diff
+# training data 1 MAPE valuate
+# a_2 0.1727
+# a_3 0.2088
 
 if __name__ == '__main__':
 
     training_2_data = pd.read_csv("../datasets/trajectories(table 5)_training2.csv")
-    pred_data = pd.read_csv("../datasets/a_2_pred.csv")
-    a_2_fact = preprocess_fact_data(select_data('A',2,training_2_data))['travel_time'].values
-    a_2_pred = pred_data['a_2_pred'].values
-    assert len(a_2_fact) == len(a_2_pred)
+    pred_data = pd.read_csv("../datasets/a_3_pred.csv")
+    a_3_fact = preprocess_fact_data(select_data('A',3,training_2_data))['travel_time'].values
+    a_3_pred = pred_data['a_3_pred'].values
+    # assert len(a_3_fact) == len(a_3_pred)
     val = .0
-    for i in range(len(a_2_fact)):
-        val = val + computeMAPE(a_2_pred[i], a_2_fact[i])
-    print(val/len(a_2_fact))
+    for i in range(len(a_3_fact)):
+        val = val + computeMAPE(a_3_pred[i], a_3_fact[i])
+    print(val/len(a_3_fact))
 

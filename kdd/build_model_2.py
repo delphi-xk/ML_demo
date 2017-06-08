@@ -20,23 +20,29 @@ from keras import backend as K
 # Consider time from 6 to 19, that is 13 hours a day
 # Total datasets length 91*13*3 = 3549
 
-A_2_Array = pd.read_csv('../datasets/A_2_processed.csv')['travel_time']\
-    .values.reshape((91, 39))
+# Training datasets2 from 07.19 - 10.24, total 98 days
+# Consider time from 6,7,8,9,15,16,17,18 that is 8 hours a day, 6,7,8,9 in one time window
+# Total datasets length 98*8*3 = 2352
+# Total 2352 / 12 = 196
 
-A_3_Array = pd.read_csv('../datasets/A_3_processed.csv')['travel_time']\
-    .values.reshape((91, 39))
+# change from (91,39) to (196,12)
+# A_2_Array = pd.read_csv('../datasets/A_2_processed.csv')['travel_time']\
+#     .values.reshape((196, 12))
+#
+# A_3_Array = pd.read_csv('../datasets/A_3_processed.csv')['travel_time']\
+#     .values.reshape((196, 12))
 
-B_1_Array = pd.read_csv('../datasets/B_1_processed.csv')['travel_time']\
-    .values.reshape((91, 39))
+# B_1_Array = pd.read_csv('../datasets/B_1_processed.csv')['travel_time']\
+#     .values.reshape((196, 12))
 
-B_3_Array = pd.read_csv('../datasets/B_3_processed.csv')['travel_time']\
-    .values.reshape((91, 39))
-
+# B_3_Array = pd.read_csv('../datasets/B_3_processed.csv')['travel_time']\
+#     .values.reshape((196, 12))
+#
 C_1_Array = pd.read_csv('../datasets/C_1_processed.csv')['travel_time']\
-    .values.reshape((91, 39))
-
+    .values.reshape((196, 12))
+#
 C_3_Array = pd.read_csv('../datasets/C_3_processed.csv')['travel_time']\
-    .values.reshape((91, 39))
+    .values.reshape((196, 12))
 
 # 20Min * 6 = 2H
 sequence_length = 6
@@ -89,19 +95,19 @@ def de_normalise_window(window_data,pred):
 
 # generate aggregate datasets
 def create_train_data():
-    A_2_trainX, A_2_trainY = create_dateset(A_2_Array, sequence_length)
-    A_3_trainX, A_3_trainY = create_dateset(A_3_Array, sequence_length)
+    # A_2_trainX, A_2_trainY = create_dateset(A_2_Array, sequence_length)
+    # A_3_trainX, A_3_trainY = create_dateset(A_3_Array, sequence_length)
     # B_1_trainX, B_1_trainY = create_dateset(B_1_Array, sequence_length)
     # B_3_trainX, B_3_trainY = create_dateset(B_3_Array, sequence_length)
-    # C_1_trainX, C_1_trainY = create_dateset(C_1_Array, sequence_length)
-    # C_3_trainX, C_3_trainY = create_dateset(C_3_Array, sequence_length)
-    X = np.concatenate((A_2_trainX, A_3_trainX,
+    C_1_trainX, C_1_trainY = create_dateset(C_1_Array, sequence_length)
+    C_3_trainX, C_3_trainY = create_dateset(C_3_Array, sequence_length)
+    X = np.concatenate((#A_2_trainX, A_3_trainX,
                         # B_1_trainX, B_3_trainX,
-                        # C_1_trainX, C_3_trainX
+                        C_1_trainX, C_3_trainX
                         ), axis=0)
-    Y = np.concatenate((A_2_trainY, A_3_trainY,
+    Y = np.concatenate((#A_2_trainY, A_3_trainY,
                         # B_1_trainY, B_3_trainY,
-                        # C_1_trainY, C_3_trainY
+                        C_1_trainY, C_3_trainY
                         ), axis=0)
     return X, Y
 
@@ -114,12 +120,12 @@ def build_model(trainX, trainY):
     model = Sequential()
     model.add(LSTM(
         3, input_shape=(sequence_length, 1), return_sequences=True))
-    model.add(Dropout(0.2))
+    # model.add(Dropout(0.2))
     model.add(LSTM(6,  return_sequences=True))
     # model.add(LSTM(13, return_sequences=True))
     # model.add(LSTM(13,  return_sequences=True))
-    model.add(Dropout(0.2))
     model.add(LSTM(6, return_sequences=False))
+    model.add(Dropout(0.2))
     model.add(Dense(1))
     model.add(Activation('linear'))
     # model.compile(loss='mean_absolute_percentage_error', optimizer='adam')
@@ -128,11 +134,11 @@ def build_model(trainX, trainY):
     return model
 
 if __name__ == "__main__":
-    # trainX, trainY = create_train_data()
-    trainX, trainY = create_dateset(A_2_Array, sequence_length)
+    trainX, trainY = create_train_data()
+    # trainX, trainY = create_dateset(A_3_Array, sequence_length)
     trainX = np.reshape(trainX, (trainX.shape[0], trainX.shape[1], 1))
     # print(trainX.shape, trainY.shape)
     c_x_model = build_model(trainX, trainY)
-    c_x_model.save('../models/a_2_models.h5')
+    c_x_model.save('../models/c_x_models.h5')
     # print(c_x_model.predict(np.reshape([ 0.5  ,  0.7 ,  0.2  , 0.33,  0.45 ,  0.67],(1,6,1))))
     # print(c_x_model.predict(np.reshape([ 0.7 ,  0.2  , 0.33,  0.45 ,  0.67, 0.44 ],(1,6,1))))

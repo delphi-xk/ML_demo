@@ -40,7 +40,8 @@ def preprocess_data(raw_data):
     # resample mean travel time (seconds) in 20Min time intervals, left closed
     n_resampled = n_time_index.resample('20Min', closed='left').mean()
     # select time from 6 to 19
-    select_time = n_resampled.index.to_series().dt.hour.isin(range(6, 19))
+    # change select time to [6,7,8,9, 15,16,17,18]
+    select_time = n_resampled.index.to_series().dt.hour.isin([6,7,8,9, 15,16,17,18])
     n_select_time = n_resampled.loc[select_time]
     # FIX ME: nearly half of the data is null, need some processing or interpolation
     # print(B_1_resample.info())
@@ -55,13 +56,18 @@ def preprocess_data(raw_data):
 
 
 def generate_data_files(dic):
-    trace_data = pd.read_csv("../datasets/trajectories(table 5)_training.csv")
+    # trace_data = pd.read_csv("../datasets/trajectories(table 5)_training.csv")
+    pd1 = pd.read_csv("../datasets/trajectories(table 5)_training.csv")
+    pd2 = pd.read_csv("../datasets/trajectories(table 5)_training2.csv")
+    trace_data = pd.concat([pd1, pd2])
     for i_id in dic.keys():
         for t_id in dic[i_id]:
             x_n = select_data(i_id, t_id, trace_data)
             x_n_processed = preprocess_data(x_n)
             file_name = '{}_{}_processed.csv'.format(i_id, t_id)
             x_n_processed.to_csv('../datasets/{}'.format(file_name))
+            print("{}_{} info:".format(i_id,t_id))
+            print(x_n_processed.info())
 
 # route = {
 #     "A": (2, 3),
@@ -69,4 +75,5 @@ def generate_data_files(dic):
 #     "C": (1, 3)
 # }
 # generate_data_files(route)
+# NOTE: C_3 has a non value
 
