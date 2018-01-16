@@ -67,7 +67,6 @@ def avgTravelTime(in_file):
     fw.close()
 
 def main():
-
     in_file = 'datasets/trajectories(table 5)_training2'
     avgTravelTime(in_file)
 
